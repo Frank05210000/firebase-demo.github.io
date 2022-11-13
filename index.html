@@ -12,11 +12,71 @@
         id="table_number"
         placeholder="table number"
       />
-      <div><button class="style" id="btn_send">送出</button></div>
+      <div><button class="style" id="btn_simmit">送出</button></div>
       <div class="style" id="list">
         <div>歷程清單</div>
       </div>
     </div>
-    <script type="module" src="index.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+      import {
+        getDatabase,
+        set,
+        ref,
+        child,
+        push,
+        update,
+      } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCJKDKDaIzcT4Io37QYqInr8-nhVMNPGR8",
+        authDomain: "appdb-67010.firebaseapp.com",
+        databaseURL:
+          "https://appdb-67010-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "appdb-67010",
+        storageBucket: "appdb-67010.appspot.com",
+        messagingSenderId: "950581354688",
+        appId: "1:950581354688:web:88ef81a38654cb8e7acd25",
+        measurementId: "G-RLLP1Y775T",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      //var input = prompt("Nice begin");
+      var inputTableNumber = document.getElementById("table_number");
+      var btnSimmit = document.getElementById("btn_simmit");
+      btnSimmit.addEventListener("click", function () {
+        var tableNumber = inputTableNumber.value;
+        alert("your type is '" + tableNumber + "'");
+        writeUserData("userId", tableNumber, "email", "imageUrl");
+        function writeUserData(userId, name, email, imageUrl) {
+          const db = getDatabase();
+          const reference = ref(db, "users/" + userId);
+
+          set(reference, {
+            username: name,
+            email: email,
+            profile_picture: imageUrl,
+          })
+            .then(() => {
+              // Data saved successfully!
+              alert("successfully");
+            })
+            .catch((error) => {
+              // The write failed...
+              alert("error\nplease check network");
+            });
+        }
+      });
+    </script>
+    <!-- <script type="module" src="/index.js"></script> -->
   </body>
 </html>
