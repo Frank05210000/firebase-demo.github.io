@@ -55,7 +55,7 @@
       var btnSimmit = document.getElementById("btn_simmit");
       btnSimmit.addEventListener("click", function () {
         var tableNumber = inputTableNumber.value;
-        alert("your type is '" + tableNumber + "'");
+        alert("you type is '" + tableNumber + "'");
         writeUserData("userId", tableNumber, "email", "imageUrl");
         function writeUserData(userId, name, email, imageUrl) {
           const db = getDatabase();
