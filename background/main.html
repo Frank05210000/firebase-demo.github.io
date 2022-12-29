@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Order-page(demo)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- vertical-align: middel -->
+    <div class="center">
+      <h1 class="title">訂單</h1>
+      <div class="orderBg" id="order1">
+        <button class="btn2" id="btn1B">Cancel</button>
+        <button class="btn1" id="btn1A">Submit</button>
+        <span class="orderName">桌號：A01 </span>
+
+        <div class="orderList">訂單編號：1230274872</div>
+        <div class="orderList">時間：2022/12/30 00:43:46</div>
+        <div class="orderList">漢堡套餐</div>
+        <div class="orderList">柳橙汁</div>
+      </div>
+    </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+      import {
+        getDatabase,
+        set,
+        ref,
+        child,
+        push,
+        update,
+      } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyCJKDKDaIzcT4Io37QYqInr8-nhVMNPGR8",
+        authDomain: "appdb-67010.firebaseapp.com",
+        databaseURL:
+          "https://appdb-67010-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "appdb-67010",
+        storageBucket: "appdb-67010.appspot.com",
+        messagingSenderId: "950581354688",
+        appId: "1:950581354688:web:88ef81a38654cb8e7acd25",
+        measurementId: "G-RLLP1Y775T",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      var order1 = document.getElementById("order1");
+      var btn1A = document.getElementById("btn1A");
+      var btn1B = document.getElementById("btn1B");
+      btn1B.addEventListener("click", function () {
+        // order1.innerHTML = ""; 瑕疵 會造成div累贅
+        alert("訂單已取消");
+        var parentObj = order1.parentNode; //获取div的父对象
+        parentObj.removeChild(order1); //通过div的父对象把它删除
+      });
+
+      //var input = prompt("Nice begin");
+      //   var inputTableNumber = document.getElementById("table_number");
+      //   var btnSimmit = document.getElementById("btn_simmit");
+      //   btnSimmit.addEventListener("click", function () {
+      //     var tableNumber = inputTableNumber.value;
+      //     alert("you type is '" + tableNumber + "'");
+      //     writeUserData("userId", tableNumber, "email", "imageUrl");
+      //     function writeUserData(userId, name, email, imageUrl) {
+      //       const db = getDatabase();
+      //       const reference = ref(db, "users/" + userId);
+
+      //       set(reference, {
+      //         username: name,
+      //         email: email,
+      //         profile_picture: imageUrl,
+      //       })
+      //         .then(() => {
+      //           // Data saved successfully!
+      //           alert("successfully");
+      //         })
+      //         .catch((error) => {
+      //           // The write failed...
+      //           alert("error\nplease check network");
+      //         });
+      //     }
+      //   });
+    </script>
+    <!-- <script type="module" src="/index.js"></script> -->
+  </body>
+</html>
