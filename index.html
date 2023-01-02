@@ -5,16 +5,25 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="ok">
+    <div class="center" id="orderList">
+      <h1 class="title">訂單</h1>
       <input
         type="text"
-        class="style"
+        class="orderBg"
         id="table_number"
         placeholder="table number"
       />
-      <div><button class="style" id="btn_simmit">送出</button></div>
-      <div class="style" id="list">
-        <div>歷程清單</div>
+      <input
+        type="text"
+        class="orderBg"
+        id="meal"
+        placeholder="餐點1,餐點2"
+      />
+      
+      <div><button class="orderBg" id="btn_simmit">送出</button></div>
+
+      <!-- <div class="orderBg" id="list">
+        <div>歷程清單</div> -->
       </div>
     </div>
     <script type="module">
@@ -45,30 +54,74 @@
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
 
-      //var input = prompt("Nice begin");
-      var inputTableNumber = document.getElementById("table_number");
-      var btnSimmit = document.getElementById("btn_simmit");
-      btnSimmit.addEventListener("click", function () {
-        var tableNumber = inputTableNumber.value;
-        alert("you type is '" + tableNumber + "'");
-        writeUserData("userId", tableNumber, "email", "imageUrl");
-        function writeUserData(userId, name, email, imageUrl) {
-          const db = getDatabase();
-          const reference = ref(db, "users/" + userId);
+        //取得時間
+        function getTime() {
+          const dt = new Date();
+          const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
+          let time =
+            dt.getFullYear() +
+            "/" +
+            padL(dt.getMonth() + 1) +
+            "/" +
+            padL(dt.getDate()) +
+            " " +
+            padL(dt.getHours()) +
+            ":" +
+            padL(dt.getMinutes()) +
+            ":" +
+            padL(dt.getSeconds());
+          return time;
+        }
+        //亂數生成器
+        function getRandomInt(max) {
+          return Math.floor(Math.random() * max);
+        }
+        //單號生成 MMDD+6位數隨機號碼
+        function getOrderNum() {
+          const dt = new Date();
+          const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
+          let orderNum = "";
+          orderNum =
+            padL(dt.getMonth() + 1) +
+            padL(dt.getDate()) +
+            getRandomInt(1000000);
+          console.log(orderNum);
+          return orderNum;
+        }
 
-          set(reference, {
-            username: name,
-            email: email,
-            profile_picture: imageUrl,
-          })
-            .then(() => {
-              // Data saved successfully!
-              alert("successfully");
-            })
-            .catch((error) => {
-              // The write failed...
-              alert("error\nplease check network");
-            });
+         //var input = prompt("Nice begin");
+        var inputTableNumber = document.getElementById("table_number");
+        var inputMeal = document.getElementById("meal");
+        var btnSimmit = document.getElementById("btn_simmit");
+        btnSimmit.addEventListener("click", function () {
+        var tableNumber = inputTableNumber.value;
+        var meal = inputMeal.value;
+        alert("you type is '" + tableNumber+","+meal+ "'");
+        writeNewPost(tableNumber, "0", meal);
+
+        //測試程式
+        // writeNewPost("A01", "2", "漢堡套餐,柳橙汁");
+        function writeNewPost(tableNums, amount, meal) {
+          const db = getDatabase();
+          //計算時間
+          let newTime = getTime();
+          let orderNum = getOrderNum();
+          // A post entry.
+          const postData = {
+            table_number: tableNums,
+            order_number: orderNum,
+            date: newTime,
+            amount: amount,
+            meal: meal,
+          };
+
+          // Get a key for a new Post.
+          const newPostKey = push(child(ref(db), "orders")).key;
+
+          // Write the new post's data simultaneously in the posts list and the user's post list.
+          const updates = {};
+          updates["/orders/" + newPostKey] = postData;
+          return update(ref(db), updates);
         }
       });
     </script>
