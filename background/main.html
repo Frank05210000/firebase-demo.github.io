@@ -7,17 +7,16 @@
   <body>
     <!-- vertical-align: middel -->
     <div class="center">
-      <h1 class="title">訂單</h1>
-      <div class="orderBg" id="order1">
+      <h1 class="title" id="orderList">訂單</h1>
+      <!-- <div class="orderBg" id="order1">
         <button class="btn2" id="btn1B">Cancel</button>
         <button class="btn1" id="btn1A">Submit</button>
         <span class="orderName">桌號：A01 </span>
-
-        <div class="orderList">訂單編號：1230274872</div>
-        <div class="orderList">時間：2022/12/30 00:43:46</div>
-        <div class="orderList">漢堡套餐</div>
-        <div class="orderList">柳橙汁</div>
-      </div>
+        <div class="orderList" id="orderNums">訂單編號：1230274872</div>
+        <div class="orderList" id="date">時間：2022/12/30 00:43:46</div>
+        <div class="orderList" id="food1">漢堡套餐</div>
+        <div class="orderList" id="food2">柳橙汁</div>
+      </div> -->
     </div>
     <script type="module">
       // Import the functions you need from the SDKs you need
@@ -25,9 +24,11 @@
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
       import {
         getDatabase,
-        set,
         ref,
+        get,
+        set,
         child,
+        onValue,
         push,
         update,
       } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
@@ -42,47 +43,88 @@
         appId: "1:950581354688:web:88ef81a38654cb8e7acd25",
         measurementId: "G-RLLP1Y775T",
       };
-
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
 
-      var order1 = document.getElementById("order1");
-      var btn1A = document.getElementById("btn1A");
-      var btn1B = document.getElementById("btn1B");
-      btn1B.addEventListener("click", function () {
+      // var order1 = document.getElementById("order1");
+      // var btn1A = document.getElementById("btn1A");
+      // var btn1B = document.getElementById("btn1B");
+      function cancel() {
         // order1.innerHTML = ""; 瑕疵 會造成div累贅
         alert("訂單已取消");
         var parentObj = order1.parentNode; //获取div的父对象
         parentObj.removeChild(order1); //通过div的父对象把它删除
+      }
+
+      function submit() {}
+
+      var perTableNums, perOrderNums, perDate, perMeal, perAmount;
+      function orderSort() {
+        if (getKey == "table_number") {
+          perTableNums = getVal;
+        } else if (getKey == "order_number") {
+          perOrderNums = getVal;
+        } else if (getKey == "date") {
+          perDate = getVal;
+        } else if (getKey == "meal") {
+          perMeal = getVal;
+        } else if (getKey == "amount") {
+          perAmount = getVal;
+        } else {
+          console.log("error:" + getKey + "," + getVal);
+        }
+      }
+      // btn1B.addEventListener("click", function () {
+      //   cancel();
+      // });
+      var getKey, getVal;
+      var a1 = "",
+        count;
+      const db = getDatabase();
+      const starCountRef = ref(db, "orders/");
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        //   updateStarCount(postElement, data);
+        // console.log(data);
+        //1
+        snapshot.forEach(function (item) {
+          // console.log(item.key + " " + item.val());
+          a1 = item.key;
+          // console.log(a1);
+
+          const a2 = ref(db, "orders/" + a1);
+          onValue(a2, (snapshot) => {
+            const data2 = snapshot.val();
+            // console.log(data2);
+            snapshot.forEach(function (item2) {
+              // order1.innerHTML =
+              //   order1.innerHTML +
+              //   `<div>${item2.key + " : " + item2.val()}</div>`;
+              //order1.innerHTML =order1.innerHTML = order1.innerHTML + `<div>${a2}</div>`;
+              // console.log(item2.key + " " + item2.val());
+              getKey = item2.key;
+              getVal = item2.val();
+              orderSort();
+
+              if (item2.key == "order_number") {
+                perOrderNums = item2.val();
+              }
+            });
+          });
+          orderList.innerHTML =
+            orderList.innerHTML +
+            `<div class="orderBg" id="order1">
+        <button class="btn2" id="btn${count}">Cancel</button>
+        <button class="btn1" id="btn${count}">Submit</button>
+        <span class="orderName">桌號：${perTableNums}</span>
+        <div class="orderList" id="orderNums">訂單編號：${perOrderNums}</div>
+        <div class="orderList" id="date">時間：${perDate}</div>
+        <div class="orderList" id="food1">${perMeal}</div>
+      </div>`;
+          count++;
+        });
       });
-
-      //var input = prompt("Nice begin");
-      //   var inputTableNumber = document.getElementById("table_number");
-      //   var btnSimmit = document.getElementById("btn_simmit");
-      //   btnSimmit.addEventListener("click", function () {
-      //     var tableNumber = inputTableNumber.value;
-      //     alert("you type is '" + tableNumber + "'");
-      //     writeUserData("userId", tableNumber, "email", "imageUrl");
-      //     function writeUserData(userId, name, email, imageUrl) {
-      //       const db = getDatabase();
-      //       const reference = ref(db, "users/" + userId);
-
-      //       set(reference, {
-      //         username: name,
-      //         email: email,
-      //         profile_picture: imageUrl,
-      //       })
-      //         .then(() => {
-      //           // Data saved successfully!
-      //           alert("successfully");
-      //         })
-      //         .catch((error) => {
-      //           // The write failed...
-      //           alert("error\nplease check network");
-      //         });
-      //     }
-      //   });
     </script>
     <!-- <script type="module" src="/index.js"></script> -->
   </body>
