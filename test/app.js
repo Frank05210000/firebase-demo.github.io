@@ -28,13 +28,4 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebas
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
-
-      database.ref('/').set('');
-database.ref('/a').set({num:1});
-database.ref('/b').set({num:2});
-database.ref('/c').set({num:3});
-database.ref('/a').push(4);
-database.ref('/b').push(5);
-database.ref('/c').push(6);
-database.ref('/a').push(7);
-database.ref('/b').push(8);
+      

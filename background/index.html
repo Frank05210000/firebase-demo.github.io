@@ -82,39 +82,39 @@
       var a1 = "",
         count;
       const db = getDatabase();
-      const starCountRef = ref(db, "orders/");
-      onValue(starCountRef, (snapshot) => {
-        const data = snapshot.val();
-        //   updateStarCount(postElement, data);
-        // console.log(data);
-        //1
-        snapshot.forEach(function (item) {
-          // console.log(item.key + " " + item.val());
-          a1 = item.key;
-          // console.log(a1);
+      const dbRef = ref(db, "orders/");
+      onValue(
+        dbRef,
+        (snapshot) => {
+          const data = snapshot.val();
+          //1
+          snapshot.forEach(function (item) {
+            // console.log(item.key + " " + item.val());
+            a1 = item.key;
+            // console.log(a1);
+            // if(a1=)
+            const a2 = ref(db, "orders/" + a1);
+            onValue(a2, (snapshot) => {
+              const data2 = snapshot.val();
+              // console.log(data2);
+              snapshot.forEach(function (item2) {
+                // order1.innerHTML =
+                //   order1.innerHTML +
+                //   `<div>${item2.key + " : " + item2.val()}</div>`;
+                //order1.innerHTML =order1.innerHTML = order1.innerHTML + `<div>${a2}</div>`;
+                // console.log(item2.key + " " + item2.val());
+                getKey = item2.key;
+                getVal = item2.val();
+                orderSort();
 
-          const a2 = ref(db, "orders/" + a1);
-          onValue(a2, (snapshot) => {
-            const data2 = snapshot.val();
-            // console.log(data2);
-            snapshot.forEach(function (item2) {
-              // order1.innerHTML =
-              //   order1.innerHTML +
-              //   `<div>${item2.key + " : " + item2.val()}</div>`;
-              //order1.innerHTML =order1.innerHTML = order1.innerHTML + `<div>${a2}</div>`;
-              // console.log(item2.key + " " + item2.val());
-              getKey = item2.key;
-              getVal = item2.val();
-              orderSort();
-
-              if (item2.key == "order_number") {
-                perOrderNums = item2.val();
-              }
+                if (item2.key == "order_number") {
+                  perOrderNums = item2.val();
+                }
+              });
             });
-          });
-          orderList.innerHTML =
-            orderList.innerHTML +
-            `<div class="orderBg" id="order1">
+            orderList.innerHTML =
+              orderList.innerHTML +
+              `<div class="orderBg" id="order1">
         <button class="btn2" id="btn${count}">Cancel</button>
         <button class="btn1" id="btn${count}">Submit</button>
         <span class="orderName">桌號：${perTableNums}</span>
@@ -122,9 +122,13 @@
         <div class="orderList" id="date">時間：${perDate}</div>
         <div class="orderList" id="food1">${perMeal}</div>
       </div>`;
-          count++;
-        });
-      });
+            count++;
+          });
+        },
+        {
+          onlyOnce: true,
+        }
+      );
     </script>
     <!-- <script type="module" src="/index.js"></script> -->
   </body>
