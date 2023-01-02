@@ -38,8 +38,8 @@
     position: relative;
   }
 .orderName{
-    font-size: 2rem;
     text-align: left;
+    font-size: 2rem;
     color: white;
 }
 .orderList{
